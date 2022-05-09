@@ -1,0 +1,45 @@
+name: Izanami CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  IZANAMI_TOKEN: ${{ secrets.IZANAMI_TOKEN }} 
+  AKENO_TOKEN: ${{ secrets.AKENO_TOKEN }} 
+  IZANAMI_ID: ${{ secrets.IZANAMI_ID }} 
+  AKENO_ID: ${{ secrets.AKENO_ID }}
+  MONGO_SRV: ${{ secrets.MONGO_SRV }} 
+
+jobs:
+  deploy-lavalink:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+        
+      - name: Delete previous lavalink instance
+        continue-on-error: true
+        run: pm2 delete lavalink
+        
+      - name: Start new lavalink instance
+        working-directory: lavalink
+        run: pm2 start start.sh --name "lavalink"
+
+  deploy-bot:
+    runs-on: self-hosted
+    needs: deploy-lavalink
+    steps:
+      - name: Delete previous bot instance
+        continue-on-error: true
+        run: pm2 delete bot
+        
+      - name: Start new bot instance
+        run: pm2 start index.js --name "bot"
+        
+  save-session:
+    runs-on: self-hosted
+    needs: [deploy-lavalink, deploy-bot]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Save PM2 session
+        run: pm2 save -f
