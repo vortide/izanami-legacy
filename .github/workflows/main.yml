@@ -1,8 +1,8 @@
-name: Izanami CI/CD
+name: Izanami Deployment Workflow Script
 
 on:
   push:
-    branches: [ server ]
+    branches: [ master ]
 
 env:
   IZANAMI_TOKEN: ${{ secrets.IZANAMI_TOKEN }} 
@@ -14,32 +14,19 @@ env:
 jobs:
   deploy-lavalink:
     runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v3
-        
-      - name: Delete previous lavalink instance
-        continue-on-error: true
-        run: pm2 delete lavalink
-        
-      - name: Start new lavalink instance
-        working-directory: lavalink
-        run: pm2 start start.sh --name "lavalink"
 
-  deploy-bot:
-    runs-on: self-hosted
-    needs: deploy-lavalink
     steps:
-      - name: Delete previous bot instance
-        continue-on-error: true
-        run: pm2 delete bot
-        
-      - name: Start new bot instance
-        run: pm2 start index.js --name "bot"
-        
-  save-session:
-    runs-on: self-hosted
-    needs: [deploy-lavalink, deploy-bot]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Save PM2 session
-        run: pm2 save -f
+    - name: Deployment
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd /home/izanami-runner/izanami
+          git pull origin master
+          git status
+          npm install
+          pm2 restart lavalink
+          pm2 restart bot
