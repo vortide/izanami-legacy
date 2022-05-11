@@ -31,4 +31,4 @@ jobs:
           cd /home/izanami-runner/izanami/lavalink
           pm2 start lavalink
           cd /home/izanami-runner/izanami
-          IZANAMI_TOKEN: ${{ secrets.IZANAMI_TOKEN }} AKENO_TOKEN: ${{ secrets.AKENO_TOKEN }} IZANAMI_ID: ${{ secrets.IZANAMI_ID }} AKENO_ID: ${{ secrets.AKENO_ID }} MONGO_SRV: ${{ secrets.MONGO_SRV }} pm2 start bot --update-env
+          IZANAMI_TOKEN=${{ secrets.IZANAMI_TOKEN }} AKENO_TOKEN=${{ secrets.AKENO_TOKEN }} IZANAMI_ID=${{ secrets.IZANAMI_ID }} AKENO_ID=${{ secrets.AKENO_ID }} MONGO_SRV="${{ secrets.MONGO_SRV }}" pm2 start bot --update-env
