@@ -12,7 +12,7 @@ env:
   MONGO_SRV: ${{ secrets.MONGO_SRV }} 
 
 jobs:
-  deploy-lavalink:
+  deploy:
     runs-on: self-hosted
 
     steps:
@@ -29,6 +29,6 @@ jobs:
           git status
           npm install
           cd /home/izanami-runner/izanami/lavalink
-          pm2 start start.sh --name lavalink
+          pm2 start lavalink
           cd /home/izanami-runner/izanami
-          pm2 start index.js --name bot
+          IZANAMI_TOKEN: ${{ secrets.IZANAMI_TOKEN }} AKENO_TOKEN: ${{ secrets.AKENO_TOKEN }} IZANAMI_ID: ${{ secrets.IZANAMI_ID }} AKENO_ID: ${{ secrets.AKENO_ID }} MONGO_SRV: ${{ secrets.MONGO_SRV }} pm2 start bot --update-env
