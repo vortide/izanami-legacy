@@ -28,5 +28,7 @@ jobs:
           git pull origin master
           git status
           npm install
-          pm2 restart lavalink
-          pm2 restart bot
+          cd /home/izanami-runner/izanami/lavalink
+          pm2 start start.sh --name lavalink
+          cd /home/izanami-runner/izanami
+          pm2 start index.js --name bot
