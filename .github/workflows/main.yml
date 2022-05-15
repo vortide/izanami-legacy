@@ -24,12 +24,12 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/izanami-runner/izanami
+          cd /home/izanami-runner/izanami-legacy
           git pull origin master
           git status
           npm install
-          cd /home/izanami-runner/izanami/lavalink
+          cd /home/izanami-runner/izanami-legacy/lavalink
           pm2 start lavalink --time
-          cd /home/izanami-runner/izanami
+          cd /home/izanami-runner/izanami-legacy
           IZANAMI_TOKEN=${{ secrets.IZANAMI_TOKEN }} AKENO_TOKEN=${{ secrets.AKENO_TOKEN }} IZANAMI_ID=${{ secrets.IZANAMI_ID }} AKENO_ID=${{ secrets.AKENO_ID }} MONGO_SRV="${{ secrets.MONGO_SRV }}" pm2 start bot --update-env --time
           pm2 save
