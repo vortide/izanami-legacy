@@ -1,2 +1,2 @@
-java -jar lavalink-arm64.jar
+java -jar Lavalink.jar
 PAUSE
